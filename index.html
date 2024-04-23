@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web NFC Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Web NFC Reader</h1>
+    <button id="startButton">Start NFC Reading</button>
+    <p id="tagData"></p>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const tagDataElement = document.getElementById('tagData');
+
+        startButton.addEventListener('click', async () => {
+            try {
+                const nfc = new NDEFReader();
+                await nfc.scan();
+                nfc.addEventListener('reading', ({ message }) => {
+                    const tagData = message.records.map(record => record.toString()).join('\n');
+                    tagDataElement.textContent = 'NFC Tag Data:\n' + tagData;
+                });
+            } catch (error) {
+                console.error('Error reading NFC:', error);
+            }
+        });
+    </script>
+</body>
+</html>
